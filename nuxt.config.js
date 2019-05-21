@@ -53,7 +53,14 @@ export default {
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
-
+  /*
+   ** ServerMiddleware Property
+   */
+  serverMiddleware: [
+    // Doc: https://nuxtjs.org/api/configuration-servermiddleware/
+    // Will register file from project api directory to handle /api/* requires
+    { path: '/api', handler: '~/api/index.js' }
+  ],
   /*
    ** Build configuration
    */
