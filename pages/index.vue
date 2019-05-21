@@ -4,6 +4,11 @@
       <div class="text-xs-center">
         <logo />
         <vuetify-logo />
+        <v-btn
+          color="info"
+          href="https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=state-296bc9a0-a2a2-4a57-be1a-d0e2fd9bb601"
+          >Authorize</v-btn
+        >
       </div>
       <v-card>
         <v-card-title class="headline"
