@@ -65,11 +65,19 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import Cookie from 'cookie-universal'
 
 export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  mounted: function() {
+    const cookies = Cookie()
+    cookies.set('cookie-name', 'cookie-value', {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7
+    })
   }
 }
 </script>

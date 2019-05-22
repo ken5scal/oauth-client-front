@@ -45,7 +45,8 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    ['cookie-universal-nuxt', { alias: 'cookiz', parseJSON: true }]
   ],
   /*
    ** Axios module configuration

@@ -1,6 +1,8 @@
 <template>
   <section>
-    <div>authz code: {{ authz }}</div>
+    <div>Authorization Response</div>
+    <div>cod: {{ authzResponse.code }}</div>
+    <div>cod: {{ authzResponse.state }}</div>
   </section>
 </template>
 
@@ -10,20 +12,20 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      authz: {},
-      code: 'hogefuga',
+      authzResponse: {},
       error: null
     }
   },
   mounted: function() {
-    this.code = 'hoge'
+    this.authzResponse = this.$route.query
+    // ↓いらなくね？
     axios
       .get('http://localhost:3000/api/authorize/callback', {
         params: this.$route.query
       })
       .then(res => {
         console.log(res.data)
-        this.authz = res.data.authz.code
+        // this.authz = res.data.authz.code
       })
       .catch(err => {
         console.log(err)
