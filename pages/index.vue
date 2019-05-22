@@ -65,7 +65,9 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
-import Cookie from 'cookie-universal'
+import Cookz from 'cookie-universal'
+
+const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
   components: {
@@ -73,11 +75,21 @@ export default {
     VuetifyLogo
   },
   mounted: function() {
-    const cookies = Cookie()
+    const cookies = Cookz()
     cookies.set('cookie-name', 'cookie-value', {
       path: '/',
       maxAge: 60 * 60 * 24 * 7
     })
+
+    const setCached = {
+      title: 'こんにちは！タイトルをキャッシュします',
+      content: 'こんにちは！内容をキャッシュします。'
+    }
+    const auth = {
+      accessToken: 'someStringGotFromApiServiceWithAjax'
+    }
+    Cookie.set('auth', auth)
+    Cookie.set('hoge', setCached)
   }
 }
 </script>
