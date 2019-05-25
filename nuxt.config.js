@@ -1,8 +1,12 @@
 import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin'
 import pkg from './package'
 
+const environment = process.env.NODE_ENV || 'development'
+const envSet = require(`./env.${environment}.js`)
+
 export default {
   mode: 'universal',
+  env: envSet,
 
   /*
    ** Headers of the page

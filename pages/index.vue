@@ -75,13 +75,21 @@ export default {
       idp: ''
     }
   },
-  mounted() {
+  mounted(context) {
     // this.$store.commit('setAuth', auth)
     // because it's in dev, secure attribute is set as false
     const state = uuid()
-    Cookie.set('SessionID', state, { secure: false })
+    Cookie.set('SessionID', state, {
+      secure: process.env.NODE_ENV !== 'development'
+    })
     this.idp =
-      'https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=' +
+      process.env.oktaAuthzEndpoint +
+      '?client_id=' +
+      process.env.oktaClientId +
+      '&response_type=code&scope=openid' +
+      '&redirect_uri=' +
+      process.env.oktaAuthzRedirectURL +
+      '&state=' +
       state
   }
 }
