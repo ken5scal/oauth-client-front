@@ -1,6 +1,7 @@
 <template>
   <section>
     <div>Authorization Response</div>
+    <div>error: {{ error }}</div>
     <div>code: {{ authzResponse.code }}</div>
     <div>state: {{ authzResponse.state }}</div>
   </section>
@@ -8,6 +9,8 @@
 
 <script>
 import axios from 'axios'
+
+const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
   data() {
@@ -17,7 +20,13 @@ export default {
     }
   },
   mounted: function() {
-    this.authzResponse = this.$route.query
+    console.log('state issue')
+    if (this.$route.query.state !== Cookie.get('SessionID')) {
+      this.error = 'bad state'
+    } else {
+      this.authzResponse = this.$route.query
+    }
+
     // ↓いらなくね？
     axios
       .get('http://localhost:3000/api/authorize/callback', {
