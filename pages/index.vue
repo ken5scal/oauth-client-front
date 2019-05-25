@@ -4,11 +4,7 @@
       <div class="text-xs-center">
         <logo />
         <vuetify-logo />
-        <v-btn
-          color="info"
-          href="https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=state-296bc9a0-a2a2-4a57-be1a-d0e2fd9bb601"
-          >Authorize</v-btn
-        >
+        <v-btn color="info" :href="idp">Authorize</v-btn>
       </div>
       <v-card>
         <v-card-title class="headline"
@@ -65,7 +61,7 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
-import Cookz from 'cookie-universal'
+import uuid from 'uuid'
 
 const Cookie = process.client ? require('js-cookie') : undefined
 
@@ -74,22 +70,19 @@ export default {
     Logo,
     VuetifyLogo
   },
-  mounted: function() {
-    const cookies = Cookz()
-    cookies.set('cookie-name', 'cookie-value', {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7
-    })
-
-    const setCached = {
-      title: 'こんにちは！タイトルをキャッシュします',
-      content: 'こんにちは！内容をキャッシュします。'
+  data() {
+    return {
+      idp: ''
     }
-    const auth = {
-      accessToken: 'someStringGotFromApiServiceWithAjax'
-    }
-    Cookie.set('auth', auth)
-    Cookie.set('hoge', setCached)
+  },
+  mounted() {
+    // this.$store.commit('setAuth', auth)
+    // because it's in dev, secure attribute is set as false
+    const state = uuid()
+    Cookie.set('SessionID', state, { secure: false })
+    this.idp =
+      'https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=' +
+      state
   }
 }
 </script>

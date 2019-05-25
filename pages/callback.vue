@@ -1,8 +1,8 @@
 <template>
   <section>
     <div>Authorization Response</div>
-    <div>cod: {{ authzResponse.code }}</div>
-    <div>cod: {{ authzResponse.state }}</div>
+    <div>code: {{ authzResponse.code }}</div>
+    <div>state: {{ authzResponse.state }}</div>
   </section>
 </template>
 
