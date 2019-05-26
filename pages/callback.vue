@@ -20,9 +20,11 @@ export default {
     }
   },
   mounted: function() {
-    console.log('state issue')
     if (this.$route.query.state !== Cookie.get('SessionID')) {
-      this.error = 'bad state'
+      this.$root.error({
+        statusCode: 403,
+        message: 'State is invalid. Suspected to be CSRFed.'
+      })
     } else {
       this.authzResponse = this.$route.query
     }
