@@ -8,6 +8,8 @@
     <div>Token Request</div>
     <div>error: {{ tokenResponseError }}</div>
     <div>access token: {{ tokenResponse.access_token }}</div>
+    <div>token type: {{ tokenResponse.token_type }}</div>
+    <div>expiry: {{ tokenResponse.expiry }}</div>
   </section>
 </template>
 
@@ -43,6 +45,7 @@ export default {
           }
         })
         .then(res => {
+          console.log(res.data)
           this.tokenResponse = res.data
         })
         .catch(err => {
