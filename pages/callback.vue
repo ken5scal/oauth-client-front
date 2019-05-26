@@ -4,6 +4,10 @@
     <div>error: {{ error }}</div>
     <div>code: {{ authzResponse.code }}</div>
     <div>state: {{ authzResponse.state }}</div>
+
+    <div>Token Request</div>
+    <div>error: {{ tokenResponseError }}</div>
+    <div>access token: {{ tokenResponse.access_token }}</div>
   </section>
 </template>
 
@@ -16,6 +20,8 @@ export default {
   data() {
     return {
       authzResponse: {},
+      tokenResponse: {},
+      tokenResponseError: '',
       error: null
     }
   },
@@ -27,21 +33,22 @@ export default {
       })
     } else {
       this.authzResponse = this.$route.query
+      const data = JSON.stringify({
+        authz_code: this.authzResponse.code
+      })
+      axios
+        .post('http://localhost:9000/token', data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => {
+          this.tokenResponse = res.data
+        })
+        .catch(err => {
+          this.tokenResponseError = err.response.data
+        })
     }
-
-    // ↓いらなくね？
-    axios
-      .get('http://localhost:3000/api/authorize/callback', {
-        params: this.$route.query
-      })
-      .then(res => {
-        console.log(res.data)
-        // this.authz = res.data.authz.code
-      })
-      .catch(err => {
-        console.log(err)
-        this.error = err
-      })
   }
 }
 </script>

@@ -86,7 +86,7 @@ export default {
       process.env.oktaAuthzEndpoint +
       '?client_id=' +
       process.env.oktaClientId +
-      '&response_type=code&scope=openid' +
+      '&response_type=code&scope=openid offline_access' +
       '&redirect_uri=' +
       process.env.oktaAuthzRedirectURL +
       '&state=' +
