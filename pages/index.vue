@@ -134,6 +134,7 @@ export default {
               .replace('+', '-')
               .replace('/', '_')
           console.log(this.authZRequest)
+          window.location.href = this.authZRequest
         })
         .catch(err => {
           console.log(err)
