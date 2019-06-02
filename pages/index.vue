@@ -91,6 +91,40 @@ export default {
       process.env.oktaAuthzRedirectURL +
       '&state=' +
       state
+  },
+  methods: {
+    // https://tools.ietf.org/html/rfc7636
+    generateCodeVerifierForPKCE: function() {
+      // Generating code_verifier
+      // https://tools.ietf.org/html/rfc7636#section-4.1
+      let codeVerifier = ''
+      const chars =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz-._~'
+
+      for (let i = 0; i < 128; i++) {
+        codeVerifier += chars[Math.floor(Math.random() * chars.length)]
+      }
+
+      // Generate Code Challenge
+      // https://tools.ietf.org/html/rfc7636#section-4.2
+      window.crypto.subtle
+        .digest('SHA-256', new TextEncoder().encode(codeVerifier))
+        .then(digestValue => {
+          const codeChallenge = window
+            .btoa(
+              new Uint8Array(digestValue).reduce(
+                (s, b) => s + String.fromCharCode(b),
+                ''
+              )
+            )
+            // base64 to base64url
+            .replace('+', '-')
+            .replace('/', '_')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>

@@ -7,7 +7,9 @@
 
     <div>Token Request</div>
     <div>error: {{ tokenResponseError }}</div>
-    <div>access token: {{ tokenResponse.access_token }}</div>
+    <div>
+      access token (Not Supposed to receive?): {{ tokenResponse.access_token }}
+    </div>
     <div>token type: {{ tokenResponse.token_type }}</div>
     <div>expiry: {{ tokenResponse.expiry }}</div>
   </section>
@@ -28,6 +30,7 @@ export default {
     }
   },
   mounted: function() {
+    // Checking CSRF attack on the `code` during the Authorization Response
     if (this.$route.query.state !== Cookie.get('SessionID')) {
       this.$root.error({
         statusCode: 403,
