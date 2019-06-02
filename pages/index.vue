@@ -4,7 +4,12 @@
       <div class="text-xs-center">
         <logo />
         <vuetify-logo />
-        <v-btn color="info" :href="idp">Authorize</v-btn>
+        <v-btn
+          color="info"
+          :href="authZRequest"
+          @click.prevent="generateCodeVerifierForPKCE"
+          >Authorize</v-btn
+        >
       </div>
       <v-card>
         <v-card-title class="headline"
@@ -72,17 +77,19 @@ export default {
   },
   data() {
     return {
-      idp: ''
+      authZRequest: '',
+      codeChallenge: '',
+      codeVerifier: ''
     }
   },
-  mounted(context) {
+  mounted() {
     // this.$store.commit('setAuth', auth)
     // because it's in dev, secure attribute is set as false
     const state = uuid()
     Cookie.set('SessionID', state, {
       secure: process.env.NODE_ENV !== 'development'
     })
-    this.idp =
+    this.authZRequest =
       process.env.oktaAuthzEndpoint +
       '?client_id=' +
       process.env.oktaClientId +
@@ -94,7 +101,7 @@ export default {
   },
   methods: {
     // https://tools.ietf.org/html/rfc7636
-    generateCodeVerifierForPKCE: function() {
+    generateCodeVerifierForPKCE() {
       // Generating code_verifier
       // https://tools.ietf.org/html/rfc7636#section-4.1
       let codeVerifier = ''
@@ -103,23 +110,30 @@ export default {
 
       for (let i = 0; i < 128; i++) {
         codeVerifier += chars[Math.floor(Math.random() * chars.length)]
+        // send to the backend
       }
+      console.log(codeVerifier)
 
-      // Generate Code Challenge
+      // Generate and Return Code Challenge
       // https://tools.ietf.org/html/rfc7636#section-4.2
       window.crypto.subtle
         .digest('SHA-256', new TextEncoder().encode(codeVerifier))
         .then(digestValue => {
-          const codeChallenge = window
-            .btoa(
-              new Uint8Array(digestValue).reduce(
-                (s, b) => s + String.fromCharCode(b),
-                ''
+          this.authZRequest +=
+            '&code_challenge_method=' +
+            'S256' + // For Now
+            '&code_challenge=' +
+            window
+              .btoa(
+                new Uint8Array(digestValue).reduce(
+                  (s, b) => s + String.fromCharCode(b),
+                  ''
+                )
               )
-            )
-            // base64 to base64url
-            .replace('+', '-')
-            .replace('/', '_')
+              // base64 to base64url
+              .replace('+', '-')
+              .replace('/', '_')
+          console.log(this.authZRequest)
         })
         .catch(err => {
           console.log(err)
