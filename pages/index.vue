@@ -114,8 +114,9 @@ export default {
               )
             )
             // base64 to base64url
-            .replace('+', '-')
-            .replace('/', '_')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '')
 
           window.location.href =
             process.env.oktaAuthzEndpoint +
