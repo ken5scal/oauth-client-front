@@ -4,10 +4,7 @@
       <div class="text-xs-center">
         <logo />
         <vuetify-logo />
-        <v-btn
-          color="info"
-          :href="authZRequest"
-          @click.prevent="generateCodeVerifierForPKCE"
+        <v-btn color="info" @click="generateCodeVerifierForPKCE"
           >Authorize</v-btn
         >
       </div>
@@ -89,15 +86,6 @@ export default {
     Cookie.set('SessionID', state, {
       secure: process.env.NODE_ENV !== 'development'
     })
-    this.authZRequest =
-      process.env.oktaAuthzEndpoint +
-      '?client_id=' +
-      process.env.oktaClientId +
-      '&response_type=code&scope=openid offline_access' +
-      '&redirect_uri=' +
-      process.env.oktaAuthzRedirectURL +
-      '&state=' +
-      state
   },
   methods: {
     // https://tools.ietf.org/html/rfc7636
@@ -112,29 +100,40 @@ export default {
         codeVerifier += chars[Math.floor(Math.random() * chars.length)]
         // send to the backend
       }
-      console.log(codeVerifier)
 
       // Generate and Return Code Challenge
       // https://tools.ietf.org/html/rfc7636#section-4.2
       window.crypto.subtle
         .digest('SHA-256', new TextEncoder().encode(codeVerifier))
         .then(digestValue => {
-          this.authZRequest +=
+          // this.authZRequest +=
+          //   '&code_challenge_method=' +
+          //   'S256' + // For Now
+          //   '&code_challenge=' +
+          const codeChallenge = window
+            .btoa(
+              new Uint8Array(digestValue).reduce(
+                (s, b) => s + String.fromCharCode(b),
+                ''
+              )
+            )
+            // base64 to base64url
+            .replace('+', '-')
+            .replace('/', '_')
+
+          window.location.href =
+            process.env.oktaAuthzEndpoint +
+            '?client_id=' +
+            process.env.oktaClientId +
+            '&response_type=code&scope=openid offline_access' +
+            '&redirect_uri=' +
+            process.env.oktaAuthzRedirectURL +
+            '&state=' +
+            Cookie.get('SessionID') +
             '&code_challenge_method=' +
             'S256' + // For Now
             '&code_challenge=' +
-            window
-              .btoa(
-                new Uint8Array(digestValue).reduce(
-                  (s, b) => s + String.fromCharCode(b),
-                  ''
-                )
-              )
-              // base64 to base64url
-              .replace('+', '-')
-              .replace('/', '_')
-          console.log(this.authZRequest)
-          window.location.href = this.authZRequest
+            codeChallenge
         })
         .catch(err => {
           console.log(err)
