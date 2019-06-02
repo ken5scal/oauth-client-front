@@ -80,7 +80,6 @@ export default {
     }
   },
   mounted() {
-    // this.$store.commit('setAuth', auth)
     // because it's in dev, secure attribute is set as false
     const state = uuid()
     Cookie.set('SessionID', state, {
@@ -98,18 +97,15 @@ export default {
 
       for (let i = 0; i < 128; i++) {
         codeVerifier += chars[Math.floor(Math.random() * chars.length)]
-        // send to the backend
       }
+      this.$store.commit('oauth/setVerifier', codeVerifier)
+      console.log('fuga: ' + this.$store.state.oauth.codeVerifier)
 
       // Generate and Return Code Challenge
       // https://tools.ietf.org/html/rfc7636#section-4.2
       window.crypto.subtle
         .digest('SHA-256', new TextEncoder().encode(codeVerifier))
         .then(digestValue => {
-          // this.authZRequest +=
-          //   '&code_challenge_method=' +
-          //   'S256' + // For Now
-          //   '&code_challenge=' +
           const codeChallenge = window
             .btoa(
               new Uint8Array(digestValue).reduce(

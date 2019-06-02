@@ -41,6 +41,7 @@ export default {
       const data = JSON.stringify({
         authz_code: this.authzResponse.code
       })
+      console.log('fuga: ' + this.$store.getters['oauth/getVerifier'])
       axios
         .post('http://localhost:9000/token', data, {
           headers: {
@@ -48,7 +49,6 @@ export default {
           }
         })
         .then(res => {
-          console.log(res.data)
           this.tokenResponse = res.data
         })
         .catch(err => {
