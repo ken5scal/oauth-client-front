@@ -38,22 +38,26 @@ export default {
       })
     } else {
       this.authzResponse = this.$route.query
-      const data = JSON.stringify({
-        authz_code: this.authzResponse.code
-      })
-      console.log('fuga: ' + this.$store.getters['oauth/getVerifier'])
       axios
-        .post('http://localhost:9000/token', data, {
-          headers: {
-            'Content-Type': 'application/json'
+        .post(
+          'http://localhost:9000/token',
+          JSON.stringify({
+            authz_code: this.$route.query.code,
+            code_verifier: this.$store.getters['oauth/getVerifier']
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        })
+        )
         .then(res => {
           this.tokenResponse = res.data
         })
         .catch(err => {
           this.tokenResponseError = err.response.data
         })
+      this.$store.commit('oauth/removeVerifier')
     }
   }
 }

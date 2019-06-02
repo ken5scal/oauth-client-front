@@ -99,7 +99,6 @@ export default {
         codeVerifier += chars[Math.floor(Math.random() * chars.length)]
       }
       this.$store.commit('oauth/setVerifier', codeVerifier)
-      console.log('fuga: ' + this.$store.state.oauth.codeVerifier)
 
       // Generate and Return Code Challenge
       // https://tools.ietf.org/html/rfc7636#section-4.2
