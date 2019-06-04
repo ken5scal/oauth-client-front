@@ -74,9 +74,10 @@ export default {
   },
   data() {
     return {
-      authZRequest: '',
-      codeChallenge: '',
-      codeVerifier: ''
+      // unreserverd chars described in RFC3986 Sec 2.3
+      // https://tools.ietf.org/html/rfc3986#section-2.3
+      unreserverdChars:
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz-._~'
     }
   },
   mounted() {
@@ -92,11 +93,11 @@ export default {
       // Generating code_verifier
       // https://tools.ietf.org/html/rfc7636#section-4.1
       let codeVerifier = ''
-      const chars =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz-._~'
 
+      const l = this.unreserverdChars
+      // code verifier can be 48~128 char length
       for (let i = 0; i < 128; i++) {
-        codeVerifier += chars[Math.floor(Math.random() * chars.length)]
+        codeVerifier += this.unreserverdChars[Math.floor(Math.random() * l)]
       }
       this.$store.commit('oauth/setVerifier', codeVerifier)
 
