@@ -4,7 +4,7 @@
       <div class="text-xs-center">
         <logo />
         <vuetify-logo />
-        <v-btn color="info" @click="generateCodeVerifierForPKCE"
+        <v-btn color="info" @click="requestForAuthorizationCode"
           >Authorize</v-btn
         >
       </div>
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     // https://tools.ietf.org/html/rfc7636
-    generateCodeVerifierForPKCE() {
+    requestForAuthorizationCode() {
       // Generating code_verifier
       // https://tools.ietf.org/html/rfc7636#section-4.1
       let codeVerifier = ''

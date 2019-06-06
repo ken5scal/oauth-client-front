@@ -8,7 +8,8 @@
     <div>Token Request</div>
     <div>error: {{ tokenResponseError }}</div>
     <div>
-      access token (Not Supposed to receive?): {{ tokenResponse.access_token }}
+      access token (Not Supposed to receive, but for debug purpose):
+      {{ tokenResponse.access_token }}
     </div>
     <div>token type: {{ tokenResponse.token_type }}</div>
     <div>expiry: {{ tokenResponse.expiry }}</div>
