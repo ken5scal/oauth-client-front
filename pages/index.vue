@@ -94,7 +94,7 @@ export default {
       // https://tools.ietf.org/html/rfc7636#section-4.1
       let codeVerifier = ''
 
-      const l = this.unreserverdChars
+      const l = this.unreserverdChars.length
       // code verifier can be 48~128 char length
       for (let i = 0; i < 128; i++) {
         codeVerifier += this.unreserverdChars[Math.floor(Math.random() * l)]
